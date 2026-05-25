@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "996393076393",
+    "firebase_url": "https://kemacetan-e8a3c-default-rtdb.firebaseio.com",
+    "project_id": "kemacetan-e8a3c",
+    "storage_bucket": "kemacetan-e8a3c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996393076393:android:1b781a0f3cbd228b298bb8",
+        "android_client_info": {
+          "package_name": "com.example.monitoring_kemacetan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcQiqj0pmSNoCJQA94v0P08hK5elySFi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
