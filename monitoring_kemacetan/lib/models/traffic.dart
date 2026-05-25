@@ -1,0 +1,59 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Traffic {
+  String? id;
+  String? image;
+  String? description;
+  String? category;
+  Timestamp? createdAt;
+  Timestamp? updatedAt;
+  String? latitude;
+  String? longitude;
+  String? userId;
+  String? userFullName;
+
+  Traffic({
+    this.id,
+    this.image,
+    this.description,
+    this.category,
+    this.createdAt,
+    this.updatedAt,
+    this.latitude,
+    this.longitude,
+    this.userId,
+    this.userFullName,
+  });
+
+  factory Traffic.fromDocument(DocumentSnapshot doc) {
+    Map<String, dynamic> data =
+        doc.data() as Map<String, dynamic>;
+
+    return Traffic(
+      id: doc.id,
+      image: data['image'],
+      description: data['description'],
+      category: data['category'],
+      createdAt: data['created_at'],
+      updatedAt: data['updated_at'],
+      latitude: data['latitude'],
+      longitude: data['longitude'],
+      userId: data['user_id'],
+      userFullName: data['user_full_name'],
+    );
+  }
+
+  Map<String, dynamic> toDocument() {
+    return {
+      'image': image,
+      'description': description,
+      'category': category,
+      'latitude': latitude,
+      'longitude': longitude,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'user_id': userId,
+      'user_full_name': userFullName,
+    };
+  }
+}
