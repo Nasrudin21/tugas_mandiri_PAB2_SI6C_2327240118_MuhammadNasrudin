@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'home_screen.dart';
-import 'sign_up_screen.dart';
+import 'package:monitoring_kemacetan/screens/home_screen.dart';
+import 'package:monitoring_kemacetan/screens/sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
