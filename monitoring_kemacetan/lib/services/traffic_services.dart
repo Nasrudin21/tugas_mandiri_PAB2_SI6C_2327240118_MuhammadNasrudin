@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/traffic.dart';
+import 'package:monitoring_kemacetan/models/traffic.dart';
 
 class TrafficService {
   static final CollectionReference _trafficCollection =
