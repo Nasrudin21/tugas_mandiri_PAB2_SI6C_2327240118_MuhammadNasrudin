@@ -14,177 +14,167 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-String? selectedCategory;
+  String? selectedCategory;
 
-List<String> get categories {
-return [
-'Macet Parah',
-'Padat Merayap',
-'Kecelakaan',
-'Perbaikan Jalan',
-'Lampu Merah Rusak',
-];
+  List<String> get categories {
+    return [
+      'Macet Parah',
+      'Padat Merayap',
+      'Kecelakaan',
+      'Perbaikan Jalan',
+      'Lampu Merah Rusak',
+    ];
+  }
+
+  IconData _iconForCategory(String? category) {
+    switch (category) {
+      case 'Macet Parah':
+        return Icons.traffic;
+      case 'Padat Merayap':
+        return Icons.directions_car_filled;
+
+      case 'Kecelakaan':
+        return Icons.warning_amber_rounded;
+
+      case 'Perbaikan Jalan':
+        return Icons.construction_rounded;
+
+      case 'Lampu Merah Rusak':
+        return Icons.traffic_outlined;
+
+      default:
+        return Icons.dashboard_rounded;
+    }
+  }
+
+  void _showCategoryFilter() async {
+    final result = await showModalBottomSheet<String?>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+
+          decoration: const BoxDecoration(
+            color: Colors.white,
+
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+
+          child: SafeArea(
+            top: false,
+
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+
+              crossAxisAlignment: CrossAxisAlignment.start,
+
+              children: [
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 5,
+
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE2E8F0),
+
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  'Pilih Kategori',
+
+                  style: TextStyle(
+                    color: Color(0xFF0F172A),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                const Text(
+                  'Tampilkan laporan sesuai kondisi jalan.',
+
+                  style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
+                ),
+
+                const SizedBox(height: 18),
+
+                _FilterTile(
+                  icon: Icons.apps_rounded,
+                  label: 'Semua Kategori',
+
+                  isSelected: selectedCategory == null,
+
+                  onTap: () => Navigator.pop(context, null),
+                ),
+
+                const SizedBox(height: 8),
+
+                ...categories.map(
+                  (category) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+
+                    child: _FilterTile(
+                      icon: _iconForCategory(category),
+
+                      label: category,
+
+                      isSelected: selectedCategory == category,
+
+                      onTap: () => Navigator.pop(context, category),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    setState(() {
+      selectedCategory = result;
+    });
+  }
 }
 
-IconData _iconForCategory(String? category) {
-switch (category) {
-case 'Macet Parah':
-return Icons.traffic;
-case 'Padat Merayap':
-  return Icons.directions_car_filled;
+Future signOut() async {
+  await FirebaseAuth.instance.signOut();
 
-case 'Kecelakaan':
-  return Icons.warning_amber_rounded;
+  if (!mounted) return;
 
-case 'Perbaikan Jalan':
-  return Icons.construction_rounded;
+  Navigator.pushAndRemoveUntil(
+    context,
 
-case 'Lampu Merah Rusak':
-  return Icons.traffic_outlined;
+    MaterialPageRoute(builder: (context) => const SignInScreen()),
 
-default:
-  return Icons.dashboard_rounded;
-
-}
-}
-
-void _showCategoryFilter() async {
-
-final result =
-await showModalBottomSheet<String?>(
-context: context,
-backgroundColor: Colors.transparent,
-isScrollControlled: true,
-
-builder: (context) {
-
-  return Container(
-    padding: const EdgeInsets.fromLTRB(
-      20,
-      12,
-      20,
-      28,
-    ),
-
-    decoration: const BoxDecoration(
-      color: Colors.white,
-
-      borderRadius:
-          BorderRadius.vertical(
-        top: Radius.circular(28),
-      ),
-    ),
-
-    child: SafeArea(
-      top: false,
-
-      child: Column(
-        mainAxisSize:
-            MainAxisSize.min,
-
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-
-        children: [
-
-          Center(
-            child: Container(
-              width: 44,
-              height: 5,
-
-              decoration: BoxDecoration(
-                color: const Color(
-                  0xFFE2E8F0,
-                ),
-
-                borderRadius:
-                    BorderRadius.circular(
-                  999,
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          const Text(
-            'Pilih Kategori',
-
-            style: TextStyle(
-              color: Color(0xFF0F172A),
-              fontSize: 22,
-              fontWeight:
-                  FontWeight.w800,
-            ),
-          ),
-
-          const SizedBox(height: 6),
-
-          const Text(
-            'Tampilkan laporan sesuai kondisi jalan.',
-
-            style: TextStyle(
-              color: Color(0xFF64748B),
-              fontSize: 14,
-            ),
-          ),
-
-          const SizedBox(height: 18),
-
-          _FilterTile(
-            icon: Icons.apps_rounded,
-            label: 'Semua Kategori',
-
-            isSelected:
-                selectedCategory == null,
-
-            onTap: () =>
-                Navigator.pop(
-              context,
-              null,
-            ),
-          ),
-
-          const SizedBox(height: 8),
-
-          ...categories.map(
-
-            (category) => Padding(
-              padding:
-                  const EdgeInsets.only(
-                bottom: 8,
-              ),
-
-              child: _FilterTile(
-                icon:
-                    _iconForCategory(
-                  category,
-                ),
-
-                label: category,
-
-                isSelected:
-                    selectedCategory ==
-                        category,
-
-                onTap: () =>
-                    Navigator.pop(
-                  context,
-                  category,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
+    (route) => false,
   );
-},
-
-);
-
-setState(() {
-selectedCategory = result;
-});
 }
+
+String generateAvatarUrl(String? fullName) {
+  final name = (fullName == null || fullName.trim().isEmpty)
+      ? 'Pengguna'
+      : fullName.trim();
+
+  final formattedName = Uri.encodeComponent(name);
+
+  return 'https://ui-avatars.com/api/?name=$formattedName&background=1E3A8A&color=fff&bold=true';
 }
+
+final user = FirebaseAuth.instance.currentUser;
+
+final currentUserId = user?.uid;
+
+final displayName =
+    (user?.displayName == null || user!.displayName!.trim().isEmpty)
+    ? 'Pengguna Jalan'
+    : user.displayName!.trim();
