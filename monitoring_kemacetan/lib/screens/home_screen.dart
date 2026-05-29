@@ -178,3 +178,162 @@ final displayName =
     (user?.displayName == null || user!.displayName!.trim().isEmpty)
     ? 'Pengguna Jalan'
     : user.displayName!.trim();
+
+    body: Container(
+
+decoration: const BoxDecoration(
+
+gradient: LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+
+  colors: [
+    Color(0xFF0F172A),
+    Color(0xFF1E3A8A),
+    Color(0xFFF8FAFC),
+  ],
+
+  stops: [0, 0.42, 0.42],
+),
+
+),
+
+child: SafeArea(
+child: Column(
+
+  children: [
+
+    Padding(
+      padding:
+          const EdgeInsets.fromLTRB(
+        18,
+        14,
+        18,
+        16,
+      ),
+
+      child: _HeroProfileCard(
+        displayName:
+            displayName,
+
+        avatarUrl:
+            generateAvatarUrl(
+          displayName,
+        ),
+
+        selectedCategory:
+            selectedCategory,
+
+        onFilterTap:
+            _showCategoryFilter,
+      ),
+    ),
+
+    Expanded(
+      child: Container(
+        width: double.infinity,
+
+        decoration:
+            const BoxDecoration(
+          color: Color(0xFFF8FAFC),
+
+          borderRadius:
+              BorderRadius.vertical(
+            top: Radius.circular(
+              30,
+            ),
+          ),
+        ),
+
+        child: StreamBuilder(
+          stream: TrafficService
+              .getTrafficListByCategory(
+            selectedCategory,
+          ),
+
+          builder:
+              (context, snapshot) {
+
+            if (snapshot
+                    .connectionState ==
+                ConnectionState
+                    .waiting) {
+
+              return const _LoadingState();
+            }
+
+            final traffics =
+                snapshot.data ?? [];
+
+            if (traffics.isEmpty) {
+
+              return _EmptyState(
+                selectedCategory:
+                    selectedCategory,
+
+                onResetFilter:
+                    selectedCategory ==
+                            null
+                        ? null
+                        : () {
+
+                            setState(() {
+                              selectedCategory =
+                                  null;
+                            });
+                          },
+              );
+            }
+
+            return ListView.builder(
+
+              padding:
+                  const EdgeInsets
+                      .fromLTRB(
+                14,
+                18,
+                14,
+                110,
+              ),
+
+              itemCount:
+                  traffics.length + 1,
+
+              itemBuilder:
+                  (context, index) {
+
+                final traffic =
+                    traffics[
+                        index - 1];
+
+                final isOwner =
+                    currentUserId !=
+                            null &&
+                        traffic.userId ==
+                            currentUserId;
+
+                return Padding(
+
+                  padding:
+                      const EdgeInsets
+                          .only(
+                    bottom: 10,
+                  ),
+
+                  child:
+                      TrafficListItem(
+                    traffic: traffic,
+                    isOwner: isOwner,
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    ),
+  ],
+),
+
+),
+)
