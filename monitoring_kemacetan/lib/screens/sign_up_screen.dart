@@ -39,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 30),
               const Text(
-                'Create Account',
+                'Buat Akun',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
