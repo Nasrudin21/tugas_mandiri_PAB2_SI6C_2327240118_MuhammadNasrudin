@@ -6,31 +6,20 @@ import 'package:geolocator/geolocator.dart';
 import 'package:monitoring_kemacetan/models/traffic.dart';
 import 'package:monitoring_kemacetan/services/traffic_services.dart';
 
-class AddTrafficScreen
-    extends StatefulWidget {
+class AddTrafficScreen extends StatefulWidget {
   const AddTrafficScreen({super.key});
 
   @override
-  State<AddTrafficScreen> createState() =>
-      _AddTrafficScreenState();
+  State<AddTrafficScreen> createState() => _AddTrafficScreenState();
 }
 
-class _AddTrafficScreenState
-    extends State<AddTrafficScreen> {
-  final TextEditingController
-      _descriptionController =
-      TextEditingController();
-
+class _AddTrafficScreenState extends State<AddTrafficScreen> {
+  final TextEditingController _descriptionController = TextEditingController();
   String? _base64Image;
-
   String? _latitude;
-
   String? _longitude;
-
   String? _category;
-
   bool _isSubmitting = false;
-
   bool _isGettingLocation = false;
 
   List<String> get categories {
@@ -43,23 +32,13 @@ class _AddTrafficScreenState
     ];
   }
 
-  Future<void>
-      pickImageAndConvert() async {
-    final ImagePicker picker =
-        ImagePicker();
-
-    final XFile? image =
-        await picker.pickImage(
-      source: ImageSource.gallery,
-    );
-
+  Future<void> pickImageAndConvert() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      final bytes =
-          await image.readAsBytes();
-
+      final bytes = await image.readAsBytes();
       setState(() {
-        _base64Image =
-            base64Encode(bytes);
+        _base64Image = base64Encode(bytes);
       });
     }
   }
@@ -68,37 +47,21 @@ class _AddTrafficScreenState
     setState(() {
       _isGettingLocation = true;
     });
-
     try {
-      bool serviceEnabled =
-          await Geolocator
-              .isLocationServiceEnabled();
-
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         return;
       }
-
-      LocationPermission permission =
-          await Geolocator
-              .checkPermission();
-
-      if (permission ==
-          LocationPermission.denied) {
-        permission =
-            await Geolocator
-                .requestPermission();
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
       }
-
-      Position position =
-          await Geolocator
-              .getCurrentPosition();
+      Position position = await Geolocator.getCurrentPosition();
 
       setState(() {
-        _latitude =
-            position.latitude.toString();
+        _latitude = position.latitude.toString();
 
-        _longitude =
-            position.longitude.toString();
+        _longitude = position.longitude.toString();
       });
     } catch (e) {
       debugPrint(e.toString());
@@ -123,9 +86,7 @@ class _AddTrafficScreenState
                       _category = cat;
                     });
 
-                    Navigator.pop(
-                      context,
-                    );
+                    Navigator.pop(context);
                   },
                 ),
               )
@@ -142,18 +103,14 @@ class _AddTrafficScreenState
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: Colors.grey.shade200,
-          borderRadius:
-              BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: const Text(
-          'Belum ada gambar',
-        ),
+        child: const Text('Belum ada gambar'),
       );
     }
 
     return ClipRRect(
-      borderRadius:
-          BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(12),
       child: Image.memory(
         base64Decode(_base64Image!),
         height: 180,
@@ -168,9 +125,7 @@ class _AddTrafficScreenState
 
     if (_category == null) return;
 
-    if (_descriptionController.text
-        .trim()
-        .isEmpty) {
+    if (_descriptionController.text.trim().isEmpty) {
       return;
     }
 
@@ -178,18 +133,14 @@ class _AddTrafficScreenState
       _isSubmitting = true;
     });
 
-    final userId =
-        FirebaseAuth.instance.currentUser?.uid;
+    final userId = FirebaseAuth.instance.currentUser?.uid;
 
-    final fullName =
-        FirebaseAuth.instance.currentUser
-            ?.displayName;
+    final fullName = FirebaseAuth.instance.currentUser?.displayName;
 
     await TrafficService.addTraffic(
       Traffic(
         image: _base64Image,
-        description:
-            _descriptionController.text,
+        description: _descriptionController.text,
         category: _category,
         latitude: _latitude,
         longitude: _longitude,
@@ -200,13 +151,9 @@ class _AddTrafficScreenState
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
-      const SnackBar(
-        content:
-            Text("Laporan berhasil"),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Laporan berhasil")));
 
     Navigator.pop(context);
   }
@@ -214,14 +161,10 @@ class _AddTrafficScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text("Tambah Laporan"),
-      ),
+      appBar: AppBar(title: const Text("Tambah Laporan")),
 
       body: SingleChildScrollView(
-        padding:
-            const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
 
         child: Column(
           children: [
@@ -230,55 +173,38 @@ class _AddTrafficScreenState
             const SizedBox(height: 12),
 
             OutlinedButton(
-              onPressed:
-                  pickImageAndConvert,
-              child: const Text(
-                'Pick Image',
-              ),
+              onPressed: pickImageAndConvert,
+              child: const Text('Pick Image'),
             ),
 
             const SizedBox(height: 12),
 
             OutlinedButton(
-              onPressed:
-                  _showCategorySelect,
-              child: const Text(
-                'Select Category',
-              ),
+              onPressed: _showCategorySelect,
+              child: const Text('Select Category'),
             ),
 
             const SizedBox(height: 8),
 
-            Text(
-              _category ??
-                  'Belum memilih kategori',
-            ),
+            Text(_category ?? 'Belum memilih kategori'),
 
             const SizedBox(height: 16),
 
             TextField(
-              controller:
-                  _descriptionController,
+              controller: _descriptionController,
               maxLines: 4,
-              decoration:
-                  const InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Deskripsi',
-                border:
-                    OutlineInputBorder(),
+                border: OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 16),
 
             OutlinedButton(
-              onPressed:
-                  _isGettingLocation
-                      ? null
-                      : _getLocation,
+              onPressed: _isGettingLocation ? null : _getLocation,
               child: Text(
-                _isGettingLocation
-                    ? 'Mengambil Lokasi...'
-                    : 'Get Location',
+                _isGettingLocation ? 'Mengambil Lokasi...' : 'Get Location',
               ),
             ),
 
@@ -293,16 +219,9 @@ class _AddTrafficScreenState
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed:
-                  _isSubmitting
-                      ? null
-                      : _submitTraffic,
+              onPressed: _isSubmitting ? null : _submitTraffic,
 
-              child: Text(
-                _isSubmitting
-                    ? 'Submitting...'
-                    : 'Submit',
-              ),
+              child: Text(_isSubmitting ? 'Submitting...' : 'Submit'),
             ),
           ],
         ),

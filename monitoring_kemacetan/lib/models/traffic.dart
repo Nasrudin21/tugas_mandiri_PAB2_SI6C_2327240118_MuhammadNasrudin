@@ -26,8 +26,7 @@ class Traffic {
   });
 
   factory Traffic.fromDocument(DocumentSnapshot doc) {
-    Map<String, dynamic> data =
-        doc.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     return Traffic(
       id: doc.id,
