@@ -16,7 +16,6 @@ class TrafficService {
 
   static Stream<List<Traffic>> getTrafficListByCategory(String? category) {
     Query query = _trafficCollection;
-
     if (category != null) {
       query = query.where('category', isEqualTo: category);
     }
